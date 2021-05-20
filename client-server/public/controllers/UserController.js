@@ -49,11 +49,7 @@ class UserController {
             },(e)=>{
                 console.error(e);
             });
-
-            
-
-        });      
-
+        });
     }
 
     onSubmit(){
@@ -75,8 +71,7 @@ class UserController {
                 btnSubmit.disabled = false;
             },(e)=>{
                 console.error(e);
-            });
-            
+            });            
         });
     }
 
@@ -105,11 +100,8 @@ class UserController {
                 fileReader.readAsDataURL(file);
             }else{
                 resolve('dist/img/boxed-bg.jpg');
-            }
-            
-        });
-
-        
+            }            
+        });        
     }
 
     getValues(formEl){
@@ -149,26 +141,28 @@ class UserController {
         );
     }
 
-    selectAll(){ //seleciona as informações já armazenadas em local storage e adiciona as linhas na tela
-        let users = User.getUsersStorage();
+    selectAll(){ 
+        //let users = User.getUsersStorage(); seleciona as informações já armazenadas em local storage e adiciona as linhas na tela
 
-        users.forEach(dataUser=>{
-            let user = new User();
+        HttpRequest.get('/users').then(data=>{            
+            data.users.forEach(dataUser=>{
+                let user = new User();
+    
+                user.loadFromJSON(dataUser);
+    
+                this.addLine(user);
+            });
+        })
 
-            user.loadFromJSON(dataUser);
-
-            this.addLine(user);
-        });
+        
     }
     
     addLine(users){
-
         let tr = this.getTr(users);
 
         this.tableEl.appendChild(tr);
 
-        this.updateCount();
-        
+        this.updateCount();        
     }
 
     getTr(users, tr = null){
@@ -193,7 +187,6 @@ class UserController {
     }
 
     addEventsTr(tr){
-
         tr.querySelector(".btn-delete").addEventListener("click", e=>{
             if(confirm("Deseja realmente excluir o usuário?")){
 
@@ -227,8 +220,7 @@ class UserController {
                             break;
                         default:
                             field.value = json[name];         
-                    };
-                    
+                    };                    
                 }
 
                 this.formUpdateEl.querySelector(".photo").src = json._photo;

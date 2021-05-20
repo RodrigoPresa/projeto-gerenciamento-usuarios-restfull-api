@@ -23,8 +23,8 @@ module.exports = app =>{
 
     route.post(
         [
-          check("name", "O nome é obrigatório.").notEmpty(),
-          check("email", "Email inválido.").notEmpty().isEmail(),
+          check("_name", "O nome é obrigatório.").notEmpty(),
+          check("_email", "Email inválido.").notEmpty().isEmail(),
         ],
         (req, res) => {
           
@@ -57,8 +57,8 @@ module.exports = app =>{
 
     routeId.put(
         [
-            check("name", "O nome é obrigatório.").notEmpty(),
-            check("email", "Email inválido.").notEmpty().isEmail(),
+            check("_name", "O nome é obrigatório.").notEmpty(),
+            check("_email", "Email inválido.").notEmpty().isEmail(),
         ],
         (req, res)=>{ //rota que edita um registro do db, baseado no id passado por parâmetro
 
