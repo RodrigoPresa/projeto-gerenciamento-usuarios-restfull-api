@@ -42,8 +42,8 @@ POST /users
 Exemplo de resultado:
 ```json
 {
-    "_id":"hjkhfui324",
-    "name":"João Rangel"
+    "_id":"FVS5l07KmOQFhFSi",
+    "name":"Teste"
 }
 ```
 
@@ -54,8 +54,8 @@ GET /users/:id
 Exemplo de resultado:
 ```json
 {
-    "_id":"hjkhfui324",
-    "name":"João Rangel"
+    "_id":"FVS5l07KmOQFhFSi",
+    "name":"Teste"
 }
 ```
 
@@ -66,7 +66,7 @@ PUT /users/:id
 Exemplo de resultado:
 ```json
 {
-    "_id":"hjkhfui324"
+    "_id":"FVS5l07KmOQFhFSi"
 }
 ```
 
@@ -77,6 +77,6 @@ DELETE /users/:id
 Exemplo de resultado:
 ```json
 {
-    "_id":"hjkhfui324"
+    "_id":"FVS5l07KmOQFhFSi"
 }
 ```
