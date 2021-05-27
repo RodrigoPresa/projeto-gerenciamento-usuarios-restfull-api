@@ -37,14 +37,14 @@ class UserController {
 
                 let user = new User();
                 user.loadFromJSON(result);
-                user.save();
+                user.save().then(user=>{
+                    this.getTr(user, tr);
 
-                this.getTr(user, tr);
-
-                this.updateCount();                
-                this.formUpdateEl.reset();
-                btnSubmit.disabled = false;
-                this.showPanelCreate();
+                    this.updateCount();                
+                    this.formUpdateEl.reset();
+                    btnSubmit.disabled = false;
+                    this.showPanelCreate();
+                });
 
             },(e)=>{
                 console.error(e);
@@ -65,10 +65,11 @@ class UserController {
             
             this.getPhoto(this.formEl).then((content)=>{
                 values.photo = content;
-                values.save();
-                this.addLine(values);
-                this.formEl.reset();
-                btnSubmit.disabled = false;
+                values.save().then(user=>{
+                    this.addLine(user);
+                    this.formEl.reset();
+                    btnSubmit.disabled = false; 
+                });               
             },(e)=>{
                 console.error(e);
             });            
@@ -141,10 +142,8 @@ class UserController {
         );
     }
 
-    selectAll(){ 
-        //let users = User.getUsersStorage(); seleciona as informações já armazenadas em local storage e adiciona as linhas na tela
-
-        HttpRequest.get('/users').then(data=>{            
+    selectAll(){
+        User.getUsers().then(data=>{            
             data.users.forEach(dataUser=>{
                 let user = new User();
     
@@ -152,9 +151,7 @@ class UserController {
     
                 this.addLine(user);
             });
-        })
-
-        
+        })        
     }
     
     addLine(users){
@@ -192,9 +189,10 @@ class UserController {
 
                 let user = new User();
                 user.loadFromJSON(JSON.parse(tr.dataset.user));
-                user.remove();
-                tr.remove();
-                this.updateCount();
+                user.remove().then(data=>{
+                    tr.remove();
+                    this.updateCount();
+                });
             }
         });
 

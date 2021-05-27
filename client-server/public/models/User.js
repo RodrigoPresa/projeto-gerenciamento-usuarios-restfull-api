@@ -54,61 +54,46 @@ class User {
                     this[name] = new Date(json[name]);
                     break;
                 default:
-                    this[name] = json[name];
+                    if(name.substring(0,1) === '_') this[name] = json[name];
             }
         }
     }
 
-    static getUsersStorage(){ //Verifica se há informações armazenadas em local storage. Caso true, armazena as infos no array vazio e retorna os valores
-        let users = [];
-
-        if(localStorage.getItem("users")){
-            users = JSON.parse(localStorage.getItem("users"));
-        }
-
-        return users;
+    static getUsers(){
+        return Fetch.get('/users');
     }
 
-    getNewId(){ //Gera um id para o usuário
-        let usersID = parseInt(localStorage.getItem("usersID"));
+    toJSON(){
+        let json = {};
 
-        if(!usersID > 0) usersID = 0;
-        usersID++;
+        Object.keys(this).forEach(key=>{
+            if(this[key] !== undefined) json[key] = this[key];
+        });
 
-        localStorage.setItem("usersID", usersID);
-
-        return usersID;
+        return json;
     }
 
     save(){
-        let users = User.getUsersStorage();
+        return new Promise((resolve, reject)=>{
+            let promise;
 
-        if(this.id > 0){
-            users.map(u=>{
-
-                if(u._id == this.id){
-                    Object.assign(u,this);
-                }
-
-                return u;
+            if(this.id){
+                promise = Fetch.put(`/users/${this.id}`, this.toJSON());
+            }else {
+                promise = Fetch.post(`/users`, this.toJSON());
+            }
+    
+            promise.then(data=>{
+                this.loadFromJSON(data);
+                resolve(this);
+            }).catch(e=>{
+                reject(e);
             });
-        }else {
-            this._id = this.getNewId();
-            users.push(this);
-
-        }
-
-        localStorage.setItem("users", JSON.stringify(users));
+        });
+        
     }
 
     remove(){
-        let users = User.getUsersStorage();
-        users.forEach((userData, index)=>{
-            if(this._id == userData._id){
-                users.splice(index, 1);
-            }
-        });
-
-        localStorage.setItem("users", JSON.stringify(users));
+        return Fetch.delete(`/users/${this.id}`);
     }
 }
